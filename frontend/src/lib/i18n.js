@@ -21,6 +21,16 @@ const localePacks = import.meta.glob('../locales/*.js')
 const instrPacks = import.meta.glob('../instr/*.js')
 
 let lang = 'en'
+// Auto-detect browser language on first load (no saved preference)
+try {
+  const saved = typeof localStorage !== 'undefined' && localStorage.getItem('og_lang')
+  if (saved && LANGS[saved]) {
+    lang = saved
+  } else if (typeof navigator !== 'undefined') {
+    const bl = (navigator.language || navigator.languages?.[0] || '').toLowerCase()
+    if (bl.startsWith('pt')) lang = 'pt'
+  }
+} catch (e) {}
 let dict = {}
 let instr = null            // { exId: [steps] } for the current language, null = English
 let version = 0
@@ -43,6 +53,7 @@ export async function setLang(l) {
   if (!LANGS[l]) l = 'en'
   if (l === lang && version > 0) return
   lang = l
+  try { localStorage.setItem('og_lang', l) } catch (e) {}
   try {
     dict = l === 'en' ? {} : (await localePacks['../locales/' + l + '.js']()).default
     instr = l === 'en' || !INSTR_LANGS.includes(l) ? null : (await instrPacks['../instr/' + l + '.js']()).default

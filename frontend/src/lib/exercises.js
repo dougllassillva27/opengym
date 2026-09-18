@@ -1,5 +1,28 @@
 import { EXDB } from './exercises-data.js'
-import { t } from './i18n.js'
+import { EXPT } from './exercises-pt.js'
+import { t, getLang } from './i18n.js'
+
+// Enrich exercises with PT-BR name and search aliases at load time.
+// Original `e.n` stays untouched so plans/routines referencing by id keep working.
+EXDB.forEach(e => {
+  const pt = EXPT[e.id]
+  if (pt) {
+    e.nPt = pt.nPt || ''
+    e.aliases = pt.aliases || []
+  } else {
+    e.nPt = ''
+    e.aliases = []
+  }
+})
+
+// Display name: prefer translated name when language matches.
+// Falls back to original English name for other languages or missing translations.
+export const exName = (ex) => {
+  if (!ex) return ''
+  const lang = getLang()
+  if (lang === 'pt' && ex.nPt) return ex.nPt
+  return ex.n || ''
+}
 
 export { EXDB }
 export const EXIDX = {}

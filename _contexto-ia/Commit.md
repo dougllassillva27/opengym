@@ -1,5 +1,9 @@
-docs(readme): traduz readme para pt-br
+feat(i18n): adiciona traducao pt-br de exercicios
 
-README.md original preservado como README-EN.md.
-Novo README.md com tradução completa para português do Brasil.
-Badges e links de clone atualizados para o fork dougllassillva27/openGym.
+- Gera exercises-pt.js com 1324 nomes traduzidos + aliases de busca via script Python usando qwenbridge
+- exercises.js enriquece EXDB em runtime com .nPt e .aliases, exporta exName()
+- Library.jsx e sheets.jsx buscam tambem em nPt e aliases (com Array.isArray guard)
+- Todos os displays usam exName() para renderizar nome traduzido quando idioma=pt
+- i18n.js auto-detecta browser language como fallback (pt-BR default para navegadores em portugues)
+- docker-compose.yml binda porta web em 127.0.0.1:8081 (sem exposicao publica)
+- .env configurado com RP_ID/ORIGIN para passkeys no dominio HTTPS
